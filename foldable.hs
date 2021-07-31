@@ -20,13 +20,13 @@ minimum' = foldr f Nothing
 maximum' :: (Foldable t, Ord a) => t a -> Maybe a
 maximum' = foldr (max . Just) Nothing
 
-null' :: (Foldable t) => t a -> Bool 
+null' :: (Foldable t) => t a -> Bool
 null' = foldr ((const . const) True) False
 
-length' :: Foldable t => t a -> Int 
+length' :: Foldable t => t a -> Int
 length' = foldr (flip (const . (+1))) 0
 
-length'' :: Foldable t => t a -> Int 
+length'' :: Foldable t => t a -> Int
 length'' = getSum . foldMap (const (Sum 1))
 
 toList' :: Foldable t => t a -> [a]
@@ -38,3 +38,7 @@ fold' = foldMap id
 foldMap' :: (Foldable t, Monoid m) => (a -> m) -> t a -> m
 foldMap' f = foldr (\c a -> f c <> a) mempty
 
+filterF :: (Applicative f, Foldable t, Monoid (f a)) => (a -> Bool) -> t a -> f a
+filterF f = foldr go mempty
+                where go c a =
+                        if f c then a <> pure c else a
