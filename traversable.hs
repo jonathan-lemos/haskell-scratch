@@ -40,13 +40,9 @@ instance Functor List where
 
 instance Applicative List where
     pure s = Cons s Nil
-    -- broken atm
-    a <*> b =
-        case (a, b) of
-            (Nil, _) -> Nil
-            (_, Nil) -> Nil
-            (Cons ahead atail, Cons bhead btail) ->
-                Cons (ahead bhead) Nil <> (atail <*> Cons bhead Nil) <> (a <*> btail)
+    Nil <*> _ = Nil
+    Cons head tail <*> b =
+        (head <$> b) <> (tail <*> b)
 
 instance Foldable List where
     foldr f i Nil = i
