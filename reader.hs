@@ -33,3 +33,16 @@ summed = uncurry (+)
 
 bolt :: Integer -> Bool 
 bolt = liftA2 (&&) (>3) (<8)
+
+sequA :: Integral a => a -> [Bool]
+sequA = sequenceA [(>3), (<8), even]
+
+s' :: Maybe Integer
+s' = summed <$> ((,) <$> xs <*> ys)
+
+p1 :: Integer -> Bool
+p1 = and . sequA
+
+p2 = fmap sequA s'
+
+p3 = fmap bolt ys
