@@ -26,3 +26,19 @@ instance Monad (Moi s) where
                 let (Moi mb) = g a in
                     mb s in
             Moi (transform . f)
+
+get :: Moi s s
+get = Moi $ \s -> (s, s)
+
+put :: s -> Moi s ()
+put s = Moi $ const ((), s)
+
+exec :: Moi s a -> s -> s
+exec (Moi sa) = snd . sa
+
+eval :: Moi s a -> s -> a
+eval (Moi sa) = fst . sa
+
+modify :: (s -> s) -> Moi s ()
+modify f = let m a = ((), a) in Moi $ m . f
+
